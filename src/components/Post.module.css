@@ -1,0 +1,50 @@
+
+.post {
+    font-family: 'Nunito', sans-serif;
+    border: 1px solid rgb(122, 116, 116);
+    margin-bottom: 10px;
+    
+    padding: 8px 8px 2px 8px;
+    width: 47vh;
+}
+
+.header {
+    display: flex;
+    flex: 6 3 1;
+}
+
+.heading {
+    font-size: 24px;
+    font-family: 'Bebas Neue', cursive;
+    background-color: aqua;
+    flex: 10
+    
+}
+
+.by {
+    background-color: beige;
+    flex: 3
+
+}
+
+.ago {
+    background-color: cadetblue;
+    color:rgb(110, 109, 109);
+    
+    
+}
+
+
+.footer {
+    display: flex;
+}
+
+.comments {
+    flex: 1;
+    background-color: rgb(127, 219, 255);
+}
+
+.readMore {
+    flex: 3.2;
+    background-color: rgb(211, 255, 198);
+}

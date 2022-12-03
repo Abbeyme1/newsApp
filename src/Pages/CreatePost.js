@@ -2,10 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Post } from "../classes/Post";
 import { Enum } from "../enums";
-import { PostsContext } from "../helper/Context";
+import { PostsContext, UserContext } from "../helper/Context";
 
 const CreatePost = () => {
   const navigate = useNavigate();
+  const [user] = useContext(UserContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -69,7 +70,7 @@ const CreatePost = () => {
           onChange={(e) => setPostedBy(e.target.value)}
         >
           <option value={Enum.ANONYMOUS}>Anonymous</option>
-          <option disabled>Username</option>
+          {user && <option>{user.name}</option>}
         </select>
       </div>
 

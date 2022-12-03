@@ -1,16 +1,18 @@
-
+/* 
 .post {
     font-family: 'Nunito', sans-serif;
     border: 1px solid rgb(122, 116, 116);
-    margin-bottom: 10px;
-    
     padding: 8px 8px 2px 8px;
-    width: 47vh;
+    flex: 40%;
+    margin: 15px 8px;
+    height: 100%;
 }
+
 
 .header {
     display: flex;
-    flex: 6 3 1;
+    height: 80%;
+    margin-bottom: 5px;
 }
 
 .heading {
@@ -40,11 +42,83 @@
 }
 
 .comments {
-    flex: 1;
+    
     background-color: rgb(127, 219, 255);
 }
 
 .readMore {
-    flex: 3.2;
+    margin-left: 5px;
     background-color: rgb(211, 255, 198);
+} */
+
+
+
+
+
+
+
+
+.post {
+    font-family: 'Nunito', sans-serif;
+    border: 1px solid rgb(122, 116, 116);
+    padding: 8px 8px 2px 8px;
+    flex: 40%;
+    margin: 15px 8px;
+    height: 100%;
+    background-color: rgb(203, 255, 255);
+}
+
+
+.header {
+    display: flex;
+    height: 80%;
+    margin-bottom: 5px;
+}
+
+.heading {
+    font-size: 24px;
+    font-family: 'Bebas Neue', cursive;
+    /* background-color: aqua; */
+    flex: 10
+    
+}
+
+.by {
+    /* background-color: beige; */
+    flex: 3;
+    border-left: 0.2px solid rgba(153, 153, 153, 0.192);
+    
+    padding-left: 5px
+
+}
+
+.ago {
+    /* background-color: cadetblue; */
+    color:rgb(22, 7, 160);
+    font-weight: 600;
+    border-left: 0.1px solid rgba(153, 153, 153, 0.178);
+    padding-left: 5px;
+    
+    
+}
+
+
+.footer {
+    display: flex;
+    border-top: 0.1px solid rgba(153, 153, 153, 0.205)
+   
+}
+
+.comments {
+    
+    /* background-color: rgb(127, 219, 255); */
+    padding-right: 2px
+}
+
+.readMore {
+    /* margin-left: 5px; */
+    /* background-color: rgb(211, 255, 198); */
+   
+    border-left: 0.2px solid rgba(153, 153, 153, 0.432);
+    padding-left: 2px
 }

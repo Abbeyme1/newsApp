@@ -1,17 +1,20 @@
 .post {
     display: flex;
+    font-family: 'Nunito', sans-serif;
+  
 }
 
 .left {
     background-color: beige;
-    flex: 7
+    flex: 7;
+    padding: 15px 20px;
+    margin-right: 20px;
 }
 
 
 .heading {
-    
-    font-family: 'Nunito', sans-serif;
-    font-size: 40px;
+
+    font-size: 45px;
     font-weight: 700;
 
 }
@@ -20,6 +23,13 @@
 .info {
     display: flex;
     box-sizing: border-box;
+}
+
+
+.description {
+    margin: 15px 0;
+    max-width: 70%;
+    font-size: 20px;
 }
 
 
@@ -39,8 +49,7 @@
 }
 
 
-.info > div:nth-child(2) > div:nth-child(1)
-{
+.like {
     background-color: rgb(220, 253, 142);
     
    
@@ -56,14 +65,18 @@
 
 
 
-.info > div:nth-child(2) > div:nth-child(2){
+.dislike {
     background-color: rgb(255, 138, 138);
-    padding: 6px;
+   
+    border:1px solid #CCC;
+    
     box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
     cursor:pointer;
     
+    padding: 5px;
+    text-align: center;
+    
 }
-
 
 
 

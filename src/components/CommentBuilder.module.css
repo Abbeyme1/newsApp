@@ -1,0 +1,20 @@
+
+.comment {
+    display: flex;
+    background-color: rgb(197, 255, 235);
+    margin: 5px 0;
+   
+}
+
+.comment > div:nth-child(1) {
+    margin-right: 8px;
+    flex: 90%;
+}
+
+.comment > div:nth-child(2)  {
+    background-color: rgb(255, 184, 251);
+    flex: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

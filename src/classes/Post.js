@@ -7,9 +7,9 @@ export class Post {
     this.title = title;
     this.description = description;
     this.location = location;
-    this.likes = 0;
-    this.dislikes = 0;
-    this.comments = [];
+    this.likes = {};
+    this.dislikes = {};
+    this.comments = {};
     this.creationTime = new Date();
     this.postedBy = postedBy || Enum.ANONYMOUS;
   }

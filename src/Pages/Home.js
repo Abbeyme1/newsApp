@@ -1,16 +1,29 @@
-import React, { useContext } from "react";
-import Navbar from "../components/Navbar";
+import React, { useContext, useEffect, useMemo } from "react";
+import { useDeferredValue } from "react";
 import Post from "../components/Post";
-import { PostsContext } from "../helper/Context";
+import { PostsContext, SearchContext } from "../helper/Context";
 import Style from "./Home.module.css";
 
 const Home = () => {
-  const [posts, setPosts] = useContext(PostsContext);
+  const [posts] = useContext(PostsContext);
+  const [search] = useContext(SearchContext);
+
+  useEffect(() => {
+    document.title = "News - Home";
+  }, []);
+
+  const defferedSearch = useDeferredValue(search);
+
+  const getPosts = useMemo(() => {
+    return Object.values(posts).filter((post) =>
+      post.title.toLowerCase().match(defferedSearch),
+    );
+  }, [posts, defferedSearch]);
 
   return (
     <div className={Style.home}>
-      {posts ? (
-        posts.map((post, index) => <Post key={index} post={post} />)
+      {getPosts.length > 0 ? (
+        getPosts.map((post) => <Post key={post.id} post={post} />)
       ) : (
         <h2>No Posts Available</h2>
       )}

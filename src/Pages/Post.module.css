@@ -11,12 +11,24 @@
     margin-right: 20px;
 }
 
+.header {
+    display: flex;
+}
+
 
 .heading {
 
     font-size: 45px;
     font-weight: 700;
+    /* background-color: rgb(255, 173, 173); */
+    /* flex: 90%; */
 
+}
+
+
+.header > div:nth-child(2){
+    font-size: 1.3em;
+    cursor: pointer;
 }
 
 
@@ -107,7 +119,26 @@
 
 
 
+
+
 .right {
     background-color: rgb(160, 236, 255);
     flex: 3;
+    padding: 8px 5px;
 }
+
+
+.right span {
+
+    font-weight: 500;
+    font-size: 20px;
+
+}
+
+
+.recommend {
+
+    /* border: 0.2px solid rgba(179, 179, 179, 0.274); */
+    margin-top: 18px;
+}
+

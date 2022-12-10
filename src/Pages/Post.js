@@ -1,35 +1,30 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Comment } from "../classes/Comment";
 import CommentBuilder from "../components/CommentBuilder";
+import Comments from "../components/Comments";
 import { PostsContext, UserContext } from "../helper/Context";
 import Style from "./Post.module.css";
 
 const Post = () => {
   const { id } = useParams();
   const [posts, setPosts] = useContext(PostsContext);
-  const [user, setUser] = useContext(UserContext);
+  const [user] = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [post, setPost] = useState({});
   const [comment, setComment] = useState("");
 
   useEffect(() => {
-    var p = posts.filter((obj) => obj.id === id)[0];
-
-    // let obj = {
-    //   description: Math.random(),
-    //   user: new User(),
-    // };
-    // if (p) {
-    //   for (let i = 0; i < 10; i++) p.comments.push(obj);
-    // }
-    // p[0].comments.push("nice");
-    setPost(p);
-  }, [posts]);
+    document.title = `${post ? post.title : "Loading.."}`;
+  }, [post]);
 
   useEffect(() => {
-    console.log(post);
-  }, [post]);
+    let p = Object.values(posts).find((obj) => {
+      return obj.id === id;
+    });
+    setPost(p);
+  }, [posts, id]);
 
   let handleLike = () => {
     if (post.likes) {
@@ -38,7 +33,6 @@ const Post = () => {
         post.likes[user.email] = true;
       } else delete post.likes[user.email];
     }
-
     updatedPosts();
   };
 
@@ -54,11 +48,10 @@ const Post = () => {
   };
 
   let updatedPosts = () => {
-    let otherPosts = posts.filter((obj) => obj.id !== id);
-    let updatedPosts = [...otherPosts, post];
-    setPosts(updatedPosts);
-    localStorage.setItem("posts", JSON.stringify(updatedPosts));
+    posts[id] = post;
     setPost({ ...post });
+    setPosts(posts);
+    localStorage.setItem("posts", JSON.stringify(posts));
   };
 
   let handleCancel = () => {
@@ -82,8 +75,11 @@ const Post = () => {
       {post && (
         <div className={Style.post}>
           <div className={Style.left}>
-            <span className={Style.heading}>{post.title}</span>
-
+            <div className={Style.header}>
+              <div className={Style.heading}>{post.title}</div>
+              {user?.admin && <div onClick={() => navigate(`edit`)}> ⚙️ </div>}
+              {/* <div> ✍🏻 ⚙️ ✏️🖌️</div> */}
+            </div>
             <div className={Style.info}>
               <div>By: {post.postedBy}</div>
 
@@ -127,27 +123,32 @@ const Post = () => {
                   </div>
                 )}
               </div>
-              {/* {post.comments?.map((detail, id) => (
-                <CommentBuilder
-                  detail={detail}
-                  key={id}
-                  deleteComment={() => deleteComment(detail.id)}
-                />
-              ))} */}
 
-              {post &&
+              {/* {post &&
                 post.comments &&
-                Object.values(post.comments)?.map((detail, id) => (
+                Object.values(post.comments)?.map((detail) => (
                   <CommentBuilder
                     detail={detail}
-                    key={id}
+                    key={detail.id}
                     deleteComment={() => deleteComment(detail.id)}
                   />
-                ))}
+                ))} */}
+
+              <Comments post={post} deleteComment={deleteComment} user={user} />
             </div>
           </div>
 
-          <div className={Style.right}>other posts</div>
+          <div className={Style.right}>
+            <span>Recommended Posts</span>
+            {Object.values(posts)
+              .filter((post) => post.id !== id)
+              .slice(0, 5)
+              .map((post) => (
+                <Link to={`/post/${post.id}`} key={post.id}>
+                  <div className={Style.recommend}>{post.title}</div>
+                </Link>
+              ))}
+          </div>
         </div>
       )}
     </div>

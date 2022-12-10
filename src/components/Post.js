@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { User } from "../classes/User";
 import { Enum } from "../enums";
+import { UserContext } from "../helper/Context";
 import Style from "./Post.module.css";
 
 const Post = ({ post }) => {
-  const [ago, setAgo] = useState(
+  const [user] = useContext(UserContext);
+  const [ago] = useState(
     Math.round((new Date() - new Date(post.creationTime)) / (1000 * 60)),
   );
 
@@ -16,15 +19,37 @@ const Post = ({ post }) => {
           <div className={Style.by}> By: {post.postedBy}</div>
         )}
         <div className={Style.ago}>
-          {ago >= 60 ? <p> {Math.round(ago / 60)}h </p> : <p>{ago}min</p>}
+          {ago >= 60 ? (
+            ago / 60 >= 24 ? (
+              <p> {Math.round(ago / 60 / 24)}d</p>
+            ) : (
+              <p> {Math.round(ago / 60)}h</p>
+            )
+          ) : (
+            <p>{ago}min</p>
+          )}
         </div>
       </div>
       <div className={Style.footer}>
-        <div className={Style.comments}>{post.comments.length} Comments </div>
+        <div className={Style.comments}>
+          {Object.values(post.comments).length} Comments{" "}
+        </div>
         <div className={Style.readMore}>
           {" "}
           <Link to={`/post/${post.id}`}>Read More</Link>
         </div>
+        {user?.admin && (
+          <>
+            <div className={Style.readMore}>
+              {" "}
+              <Link to={`/post/${post.id}/edit`}>Edit</Link>
+            </div>
+            <div className={Style.readMore}>
+              {" "}
+              <Link to={`/post/${post.id}/delete`}>Delete</Link>
+            </div>
+          </>
+        )}
       </div>
 
       {/* location */}

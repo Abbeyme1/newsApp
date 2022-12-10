@@ -47,7 +47,7 @@
 
  
 .navbar {
-    height: 6vh;
+    height: 40%;
     background-color: rgb(142, 171, 250);
     margin-bottom: 10px;
     display: flex;
@@ -65,14 +65,22 @@
 
 .left {
     /* background-color: rgb(200, 185, 255); */
-    flex: 10%;
+    flex: 25%;
     align-items: center;
 }
 
 
+.middle {
+    /* background-color: rgb(195, 255, 210); */
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .right {
     /* background-color: rgb(227, 185, 255); */
-    flex: 80%;
+    flex: 25%;
     display: flex;
     justify-content: flex-end;
 }

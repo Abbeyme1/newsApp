@@ -1,19 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User } from "../classes/User";
-import Post from "../components/Post";
-import { Enum } from "../enums";
-import { PostsContext, UserContext, UsersContext } from "../helper/Context";
-import { CustomError } from "../classes/CustomError";
-import Style from "./Login.module.css";
+import { UserContext, UsersContext } from "../helper/Context";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useContext(UserContext);
-  const [users, setUsers] = useContext(UsersContext);
+  const [users] = useContext(UsersContext);
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
+
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
 
   useEffect(() => {
     if (user) navigate("/");

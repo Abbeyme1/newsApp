@@ -1,0 +1,22 @@
+
+.searchBar {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: antiquewhite; */
+    height: 80%;
+    width: 100%;
+}
+
+
+
+
+.searchBar > input {
+   
+    width: 90%;
+    height: 68%;
+    background-color: rgb(167, 208, 255);
+    border: 0;
+    outline: 0;
+
+}

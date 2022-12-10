@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../helper/Context";
 import Style from "./Navbar.module.css";
+import Search from "./Search";
 
 const Navbar = () => {
   const [user] = useContext(UserContext);
@@ -11,11 +12,26 @@ const Navbar = () => {
       <div className={Style.left}>
         <div>
           <Link to="/">
-            <img className={Style.logo} src={require("../images/news.jpg")} />
+            <img
+              className={Style.logo}
+              src={require("../images/news.jpg")}
+              alt="News"
+            />
           </Link>
         </div>
       </div>
+      <div className={Style.middle}>
+        <Search />
+      </div>
       <div className={Style.right}>
+        {user?.admin && (
+          <>
+            <div>
+              <Link to="/users">Users</Link>
+            </div>
+          </>
+        )}
+
         <div>
           <Link to="/create">Create Post</Link>
         </div>

@@ -4,7 +4,7 @@ import Style from "./CommentBuilder.module.css";
 
 const CommentBuilder = ({ detail, deleteComment }) => {
   const [isHovering, setIsHovering] = useState(false);
-  const [user, setUser] = useContext(UserContext);
+  const [user] = useContext(UserContext);
 
   const handleMouseOver = () => {
     setIsHovering(true);
@@ -20,10 +20,15 @@ const CommentBuilder = ({ detail, deleteComment }) => {
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
     >
-      <div> {detail.comment} </div>
+      <div>
+        <div>
+          <b>{detail.email}</b>
+        </div>
+        <div>{detail.comment}</div>
+      </div>
 
       <div>
-        {user && user.email === detail.email && isHovering && (
+        {user && (user.email === detail.email || user.admin) && isHovering && (
           <button onClick={() => deleteComment()}>-</button>
         )}
       </div>

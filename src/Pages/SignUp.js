@@ -1,10 +1,7 @@
-import { clear } from "@testing-library/user-event/dist/clear";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "../classes/User";
-import Post from "../components/Post";
-import { Enum } from "../enums";
-import { PostsContext, UserContext, UsersContext } from "../helper/Context";
+import { UserContext, UsersContext } from "../helper/Context";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -13,6 +10,10 @@ const SignUp = () => {
   const [user, setUser] = useContext(UserContext);
   const [users, setUsers] = useContext(UsersContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Signup";
+  }, []);
 
   useEffect(() => {
     if (user) navigate("/");

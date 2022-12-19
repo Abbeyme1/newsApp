@@ -1,5 +1,5 @@
 import { createMemoryHistory } from "@remix-run/router";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, getByText, render, screen } from "@testing-library/react";
 import { __esModule } from "@testing-library/user-event";
 import React from "react";
 import { unmountComponentAtNode } from "react-dom";
@@ -31,6 +31,10 @@ const setUser = (newUser) => {
 const MockLogin = () => {
   return (
     <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<div>home</div>} />
+        <Route path="/signup" element={<div> SIGNUP </div>} />
+      </Routes>
       <UserContext.Provider value={[user, setUser]}>
         <UsersContext.Provider value={[users, setUsers]}>
           <Login />
@@ -228,20 +232,11 @@ it("error rendered on wrong credentials", () => {
   expect(error.textContent).toContain("Try again");
 });
 
-it.todo(
-  "register link should work",
-  // () => {
-  // const history = createMemoryHistory();
-  // render(
-  //   <Router history={history}>
-  //     <Route path="/signup" element={<SignUp />}>
-  //       <MockLogin />
-  //     </Route>
-  //   </Router>,
-  // );
-  // const registerLink = screen.getByText(/don't have an account/i);
-  // let a = fireEvent.click(registerLink);
-  // console.log(a);
+it("register link should work", () => {
+  render(<MockLogin />);
+  const registerLink = screen.getByText(/don't have an account/i);
+  fireEvent.click(registerLink);
+  const renderedSignUpPage = screen.getByText("SIGNUP");
+  expect(renderedSignUpPage).toBeInTheDocument();
   // expect(register).toBeInTheDocument();
-  // }
-);
+});

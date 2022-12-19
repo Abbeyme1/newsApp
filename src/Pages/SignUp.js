@@ -10,6 +10,7 @@ const SignUp = () => {
   const [user, setUser] = useContext(UserContext);
   const [users, setUsers] = useContext(UsersContext);
   const navigate = useNavigate();
+  const [error, setError] = useState();
 
   useEffect(() => {
     document.title = "Signup";
@@ -27,12 +28,11 @@ const SignUp = () => {
 
   let createUser = () => {
     if (users[email]) {
-      console.log("user already exists");
+      setError("user already exists");
       clear();
       return;
     }
     let newUser = new User(name, email, password);
-
     let updatedUsers = {
       ...users,
       [newUser.email]: newUser,
@@ -49,6 +49,7 @@ const SignUp = () => {
       <div>
         <span> Name </span>
         <input
+          placeholder="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -59,12 +60,18 @@ const SignUp = () => {
       <div>
         <span> Email </span>
 
-        <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
       </div>
 
       <div>
         <span> Password </span>
         <input
+          placeholder="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -73,12 +80,24 @@ const SignUp = () => {
       </div>
       <br />
 
+      {error && (
+        <span style={{ color: "red" }} data-testid="error">
+          {" "}
+          {error}
+        </span>
+      )}
+
+      <br />
+      <br />
+
       <div>
         {" "}
         <Link to="/login">Already have an account ? </Link>
       </div>
       <br />
-      <button onClick={createUser}>Register</button>
+      <button onClick={createUser} disabled={!name || !email || !password}>
+        Register
+      </button>
     </div>
   );
 };

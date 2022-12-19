@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext, UsersContext } from "../helper/Context";
+import { UserContext, UsersContext } from "../../helper/Context";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,7 +8,8 @@ const Login = () => {
   const [user, setUser] = useContext(UserContext);
   const [users] = useContext(UsersContext);
   const navigate = useNavigate();
-  const [errors] = useState({});
+  // const [errors] = useState({});
+  const [error, setError] = useState();
 
   useEffect(() => {
     document.title = "Login";
@@ -18,7 +19,7 @@ const Login = () => {
     if (user) navigate("/");
   }, [user]);
 
-  useEffect(() => {}, [errors]);
+  // useEffect(() => {}, [errors]);
 
   let login = () => {
     // setErrors([]);
@@ -36,16 +37,18 @@ const Login = () => {
     //   });
 
     let user = users[email];
+    setError();
     if (user) {
       if (user.password === password) {
-        console.log("yes");
         localStorage.setItem("user", JSON.stringify(user));
         setUser(user);
       } else {
-        console.log("no");
+        setError("Something went wrong. Try again.");
+        setEmail("");
         setPassword("");
       }
     } else {
+      setError("Something went wrong. Try again.");
       console.log("user doesn't exists");
       // setErrors({
       //   ...errors,
@@ -58,7 +61,12 @@ const Login = () => {
       <div>
         <span> Email </span>
 
-        <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
         {/* {errors && errors[Enum.EMAIL] && (
           <div key={errors[Enum.EMAIL].message} className={Style.error}>
@@ -70,6 +78,7 @@ const Login = () => {
       <div>
         <span> Password </span>
         <input
+          placeholder="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -81,6 +90,15 @@ const Login = () => {
             {errors[Enum.PASSWORD].message}
           </div>
         )} */}
+
+        <br />
+        <br />
+        {error && (
+          <span style={{ color: "red" }} data-testid="error">
+            {" "}
+            {error}
+          </span>
+        )}
       </div>
       <br />
 
@@ -89,7 +107,9 @@ const Login = () => {
         <Link to="/signup">Don't have an account ? </Link>
       </div>
       <br />
-      <button onClick={login}>Login</button>
+      <button onClick={login} disabled={!email || !password}>
+        Login
+      </button>
 
       <br />
       <br />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import "./App.css";
 import CreatePost from "./Pages/CreatePost";
 import {
@@ -7,17 +7,18 @@ import {
   UserContext,
   UsersContext,
 } from "./helper/Context";
-import Home from "./Pages/Home";
 import { Route, Routes } from "react-router-dom";
-import Post from "./Pages/Post";
-import Navbar from "./components/Navbar";
-import Login from "./Pages/Login";
-import SignUp from "./Pages/SignUp";
-import Logout from "./Pages/Logout";
-import EditPage from "./Pages/EditPage";
-import DeletePost from "./Pages/DeletePost";
-import Users from "./Pages/Users";
-import EditUser from "./Pages/EditUser";
+import LoadingScreen from "./components/LoadingScreen";
+const Home = React.lazy(() => import("./Pages/Home"));
+const Post = React.lazy(() => import("./Pages/Post"));
+const Navbar = React.lazy(() => import("./components/Navbar"));
+const Login = React.lazy(() => import("./Pages/Login/Login"));
+const SignUp = React.lazy(() => import("./Pages/SignUp"));
+const Logout = React.lazy(() => import("./Pages/Logout"));
+const EditPage = React.lazy(() => import("./Pages/EditPage"));
+const DeletePost = React.lazy(() => import("./Pages/DeletePost"));
+const Users = React.lazy(() => import("./Pages/Users"));
+const EditUser = React.lazy(() => import("./Pages/EditUser"));
 
 function App() {
   const [posts, setPosts] = useState({});
@@ -47,19 +48,21 @@ function App() {
       <UsersContext.Provider value={[users, setUsers]}>
         <UserContext.Provider value={[user, setUser]}>
           <SearchContext.Provider value={[search, setSearch]}>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />}></Route>
-              <Route path="/create" element={<CreatePost />}></Route>
-              <Route path="/users" element={<Users />}></Route>
-              <Route path="/post/:id" element={<Post />}></Route>
-              <Route path="/post/:id/edit" element={<EditPage />}></Route>
-              <Route path="/post/:id/delete" element={<DeletePost />}></Route>
-              <Route path="/login" element={<Login />}></Route>
-              <Route path="/signup" element={<SignUp />}></Route>
-              <Route path="/logout" element={<Logout />}></Route>
-              <Route path="/user/:email/edit" element={<EditUser />}></Route>
-            </Routes>
+            <Suspense fallback={<LoadingScreen />}>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home />}></Route>
+                <Route path="/create" element={<CreatePost />}></Route>
+                <Route path="/users" element={<Users />}></Route>
+                <Route path="/post/:id" element={<Post />}></Route>
+                <Route path="/post/:id/edit" element={<EditPage />}></Route>
+                <Route path="/post/:id/delete" element={<DeletePost />}></Route>
+                <Route path="/login" element={<Login />}></Route>
+                <Route path="/signup" element={<SignUp />}></Route>
+                <Route path="/logout" element={<Logout />}></Route>
+                <Route path="/user/:email/edit" element={<EditUser />}></Route>
+              </Routes>
+            </Suspense>
           </SearchContext.Provider>
         </UserContext.Provider>
       </UsersContext.Provider>

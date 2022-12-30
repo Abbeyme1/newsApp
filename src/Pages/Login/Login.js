@@ -1,19 +1,33 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext, UsersContext } from "../../helper/Context";
+import { login as loginAction } from "../../redux/features/user/userSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useContext(UserContext);
-  const [users] = useContext(UsersContext);
   const navigate = useNavigate();
-  // const [errors] = useState({});
-  const [error, setError] = useState();
+  const dispatch = useDispatch();
+  const buttonRef = useRef();
+  const {
+    user,
+    loading,
+    loginError: error,
+  } = useSelector((state) => state.user);
 
   useEffect(() => {
     document.title = "Login";
   }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", loginOnEnter, true);
+  }, []);
+
+  function loginOnEnter(key) {
+    if (key.key === "Enter") {
+      buttonRef.current.click();
+    }
+  }
 
   useEffect(() => {
     if (user) navigate("/");
@@ -22,42 +36,18 @@ const Login = () => {
   // useEffect(() => {}, [errors]);
 
   let login = () => {
-    // setErrors([]);
-    // if (email.length === 0 || password) {
-    //   setErrors({
-    //     ...errors,
-    //     [Enum.EMAIL]: new CustomError("Enter Email", Enum.EMAIL),
-    //   });
-    // }
-
-    // if (password.length === 0)
-    //   setErrors({
-    //     ...errors,
-    //     [Enum.PASSWORD]: new CustomError("Enter Password", Enum.PASSWORD),
-    //   });
-
-    let user = users[email];
-    setError();
-    if (user) {
-      if (user.password === password) {
-        localStorage.setItem("user", JSON.stringify(user));
-        setUser(user);
-      } else {
-        setError("Something went wrong. Try again.");
-        setEmail("");
-        setPassword("");
-      }
-    } else {
-      setError("Something went wrong. Try again.");
-      console.log("user doesn't exists");
-      // setErrors({
-      //   ...errors,
-      //   [Enum.GENERAL]: new CustomError("User doesn't exists ", Enum.GENERAL),
-      // });
-    }
+    dispatch(loginAction({ email, password }));
+    clear();
   };
+
+  let clear = () => {
+    setEmail("");
+    setPassword("");
+  };
+
   return (
     <div>
+      {loading && <>loading....</>}
       <div>
         <span> Email </span>
 
@@ -67,12 +57,6 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
-        {/* {errors && errors[Enum.EMAIL] && (
-          <div key={errors[Enum.EMAIL].message} className={Style.error}>
-            {errors[Enum.EMAIL].message}
-          </div>
-        )} */}
       </div>
 
       <div>
@@ -84,12 +68,6 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
-        {/* {errors && errors[Enum.PASSWORD] && (
-          <div key={errors[Enum.PASSWORD].message} className={Style.error}>
-            {errors[Enum.PASSWORD].message}
-          </div>
-        )} */}
 
         <br />
         <br />
@@ -107,18 +85,11 @@ const Login = () => {
         <Link to="/signup">Don't have an account ? </Link>
       </div>
       <br />
-      <button onClick={login} disabled={!email || !password}>
+      <button ref={buttonRef} onClick={login} disabled={!email || !password}>
         Login
       </button>
-
       <br />
       <br />
-
-      {/* {errors && errors[Enum.GENERAL] && (
-        <div key={errors[Enum.GENERAL].message} className={Style.error}>
-          {errors[Enum.GENERAL].message}
-        </div>
-      )} */}
     </div>
   );
 };

@@ -1,16 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { User } from "../classes/User";
-import { UserContext, UsersContext } from "../helper/Context";
+import { signUp as signUpAction } from "../redux/features/user/userSlice";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useContext(UserContext);
-  const [users, setUsers] = useContext(UsersContext);
+  const buttonRef = useRef();
   const navigate = useNavigate();
-  const [error, setError] = useState();
+  const {
+    user,
+    loading,
+    signUpError: error,
+  } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.title = "Signup";
@@ -20,6 +24,16 @@ const SignUp = () => {
     if (user) navigate("/");
   }, [user]);
 
+  useEffect(() => {
+    document.addEventListener("keydown", signUpOnEnter, true);
+  }, []);
+
+  function signUpOnEnter(key) {
+    if (key.key === "Enter") {
+      buttonRef.current.click();
+    }
+  }
+
   let clear = () => {
     setName("");
     setEmail("");
@@ -27,25 +41,12 @@ const SignUp = () => {
   };
 
   let createUser = () => {
-    if (users[email]) {
-      setError("user already exists");
-      clear();
-      return;
-    }
-    let newUser = new User(name, email, password);
-    let updatedUsers = {
-      ...users,
-      [newUser.email]: newUser,
-    };
-
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-    localStorage.setItem("user", JSON.stringify(newUser));
-
-    setUser(newUser);
-    setUsers(updatedUsers);
+    dispatch(signUpAction({ name, email, password }));
+    clear();
   };
   return (
     <div>
+      {loading && <>loading...</>}
       <div>
         <span> Name </span>
         <input
@@ -95,7 +96,11 @@ const SignUp = () => {
         <Link to="/login">Already have an account ? </Link>
       </div>
       <br />
-      <button onClick={createUser} disabled={!name || !email || !password}>
+      <button
+        ref={buttonRef}
+        onClick={createUser}
+        disabled={!name || !email || !password}
+      >
         Register
       </button>
     </div>

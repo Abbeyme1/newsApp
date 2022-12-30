@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { UserContext } from "../helper/Context";
 import Style from "./Navbar.module.css";
 import Search from "./Search";
 
 const Navbar = () => {
-  const [user] = useContext(UserContext);
+  const { user } = useSelector((state) => state.user);
 
   return (
     <div className={Style.navbar}>

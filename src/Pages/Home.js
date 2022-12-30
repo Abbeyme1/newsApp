@@ -1,15 +1,19 @@
 import React, { useContext, useEffect, useMemo } from "react";
 import { useDeferredValue } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Post from "../components/Post";
-import { PostsContext, SearchContext } from "../helper/Context";
+import { SearchContext } from "../helper/Context";
 import Style from "./Home.module.css";
+import { fetchPosts } from "../redux/features/posts/postsSlice";
 
 const Home = () => {
-  const [posts] = useContext(PostsContext);
+  const { posts } = useSelector((state) => state.posts);
   const [search] = useContext(SearchContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.title = "News - Home";
+    dispatch(fetchPosts());
   }, []);
 
   const defferedSearch = useDeferredValue(search);

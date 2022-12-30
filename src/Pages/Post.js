@@ -1,15 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Comment } from "../classes/Comment";
-import CommentBuilder from "../components/CommentBuilder";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import Comments from "../components/Comments";
-import { PostsContext, UserContext } from "../helper/Context";
+import Recommend from "../components/Recommend";
 import Style from "./Post.module.css";
 
 const Post = () => {
   const { id } = useParams();
-  const [posts, setPosts] = useContext(PostsContext);
-  const [user] = useContext(UserContext);
+  const { posts } = useSelector((state) => state.posts);
+  const { user } = useSelector((state) => state.user);
+  const buttonRef = useRef();
+
   const navigate = useNavigate();
 
   const [post, setPost] = useState({});
@@ -17,41 +19,49 @@ const Post = () => {
 
   useEffect(() => {
     document.title = `${post ? post.title : "Loading.."}`;
-  }, [post]);
+  }, [post, id]);
 
   useEffect(() => {
-    let p = Object.values(posts).find((obj) => {
-      return obj.id === id;
-    });
-    setPost(p);
-  }, [posts, id]);
+    getPost();
+  }, [id]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", submitOnEnter, true);
+  }, []);
+
+  function submitOnEnter(key) {
+    if (key.key === "Enter") {
+      buttonRef.current.click();
+    }
+  }
+
+  let getPost = () => {
+    axios
+      .get(`/posts/${id}`)
+      .then((res) => {
+        setPost(res.data);
+      })
+      .catch((e) => console.log(e));
+  };
 
   let handleLike = () => {
-    if (post.likes) {
-      if (!post.likes[user.email]) {
-        delete post.dislikes[user.email]; // if disliked
-        post.likes[user.email] = true;
-      } else delete post.likes[user.email];
-    }
-    updatedPosts();
+    if (user)
+      axios
+        .post(`/posts/${id}/like`, { userId: user.email })
+        .then((res) => {
+          setPost(res.data);
+        })
+        .catch((err) => console.log(err));
   };
 
   let handleDislike = () => {
-    if (post.dislikes) {
-      if (!post.dislikes[user.email]) {
-        delete post.likes[user.email]; // if liked
-        post.dislikes[user.email] = true;
-      } else delete post.dislikes[user.email];
-    }
-
-    updatedPosts();
-  };
-
-  let updatedPosts = () => {
-    posts[id] = post;
-    setPost({ ...post });
-    setPosts(posts);
-    localStorage.setItem("posts", JSON.stringify(posts));
+    if (user)
+      axios
+        .post(`/posts/${id}/dislike`, { userId: user.email })
+        .then((res) => {
+          setPost(res.data);
+        })
+        .catch((err) => console.log(err));
   };
 
   let handleCancel = () => {
@@ -59,15 +69,33 @@ const Post = () => {
   };
 
   let handlePostComment = () => {
-    let userComment = new Comment(user.name, user.email, comment);
-    post.comments[userComment.id] = userComment;
-    setComment("");
-    updatedPosts();
+    if (user)
+      axios
+        .post(`/posts/${id}/comment`, {
+          name: user.name,
+          email: user.email,
+          comment: comment,
+        })
+        .then((res) => {
+          setPost(res.data);
+          setComment("");
+        })
+        .catch((err) => console.log(err));
   };
 
-  var deleteComment = (id) => {
-    delete post.comments[id];
-    updatedPosts();
+  var deleteComment = (commentId) => {
+    if (user)
+      axios
+        .delete(`/posts/${id}/comment`, {
+          data: {
+            userId: user.email,
+            commentId,
+          },
+        })
+        .then((res) => {
+          setPost(res.data);
+        })
+        .catch((err) => console.log(err));
   };
 
   return (
@@ -118,7 +146,13 @@ const Post = () => {
                       onChange={(e) => setComment(e.target.value)}
                       placeholder="Add a comment..."
                     ></input>
-                    <button onClick={handlePostComment}>Comment</button>
+                    <button
+                      ref={buttonRef}
+                      disabled={!comment}
+                      onClick={handlePostComment}
+                    >
+                      Comment
+                    </button>
                     <button onClick={handleCancel}>Cancel</button>
                   </div>
                 )}
@@ -139,15 +173,7 @@ const Post = () => {
           </div>
 
           <div className={Style.right}>
-            <span>Recommended Posts</span>
-            {Object.values(posts)
-              .filter((post) => post.id !== id)
-              .slice(0, 5)
-              .map((post) => (
-                <Link to={`/post/${post.id}`} key={post.id}>
-                  <div className={Style.recommend}>{post.title}</div>
-                </Link>
-              ))}
+            <Recommend posts={posts} id={id} />
           </div>
         </div>
       )}

@@ -1,21 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { UserContext, UsersContext } from "../helper/Context";
+import { setUser as setCurrentUser } from "../redux/features/user/userSlice";
 
 const EditUser = () => {
   const { email: userEmail } = useParams();
-  const [users, setUsers] = useContext(UsersContext);
+  const { user: currentUser } = useSelector((state) => state.user);
   const [user, setUser] = useState();
-  const [currentUser, setCurrentUser] = useContext(UserContext);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [admin, setAdmin] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const buttonRef = useRef();
 
   useEffect(() => {
     document.title = "Edit User";
   }, []);
+
+  useEffect(() => {
+    getUser();
+  }, [userEmail]);
 
   useEffect(() => {
     if (currentUser === null || (currentUser && !currentUser?.admin))
@@ -23,35 +32,53 @@ const EditUser = () => {
   }, [currentUser]);
 
   useEffect(() => {
-    let user = Object.values(users).find((user) => user.email === userEmail);
     setName(user ? user.name : "");
     setEmail(user ? user.email : "");
     setAdmin(user ? user.admin : false);
-    setUser(user);
-  }, [userEmail, users]);
+  }, [user]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", editOnEnter, true);
+  }, []);
+
+  function editOnEnter(key) {
+    if (key.key === "Enter") {
+      buttonRef.current.click();
+    }
+  }
+
+  const getUser = () => {
+    setLoading(true);
+    axios
+      .get(`/user/${userEmail}`)
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((e) => console.log(e.message));
+    setLoading(false);
+  };
 
   const handleEdit = () => {
-    // handle email alread exists...
+    setLoading(true);
+    axios
+      .put(`/user/update/${user.email}`, { name, email, admin })
+      .then((res) => {
+        let updatedUser = res.data;
+        if (updatedUser.email === currentUser.email) {
+          dispatch(setCurrentUser(updatedUser));
+        }
 
-    let prevEmail = user.email;
-    user.name = name;
-    user.email = email;
-    user.admin = admin;
+        setUser(updatedUser);
+        navigate(-1);
+      })
+      .catch((e) => setError(e.response.data.message));
 
-    if (prevEmail !== email) delete users[prevEmail];
-
-    if (userEmail === user.email) {
-      setCurrentUser(user);
-      localStorage.setItem("user", JSON.stringify(currentUser));
-    }
-    users[email] = user;
-    localStorage.setItem("users", JSON.stringify(users));
-
-    navigate(-1);
+    setLoading(false);
   };
 
   return (
     <div>
+      {loading && <>loading...</>}
       <div>
         <span> Name </span>
         <input
@@ -99,7 +126,11 @@ const EditUser = () => {
       <br />
 
       <br />
-      <button onClick={handleEdit}>Edit User</button>
+      <button onClick={handleEdit} ref={buttonRef}>
+        Edit User
+      </button>
+
+      {error && <div style={{ color: "red" }}>{error}</div>}
     </div>
   );
 };

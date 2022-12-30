@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
-import { UserContext } from "../helper/Context";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import Style from "./CommentBuilder.module.css";
 
 const CommentBuilder = ({ detail, deleteComment }) => {
   const [isHovering, setIsHovering] = useState(false);
-  const [user] = useContext(UserContext);
+  const { user } = useSelector((state) => state.user);
 
   const handleMouseOver = () => {
     setIsHovering(true);

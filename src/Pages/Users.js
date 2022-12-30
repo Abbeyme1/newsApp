@@ -1,9 +1,25 @@
-import React, { useContext } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UsersContext } from "../helper/Context";
 
 const Users = () => {
-  const [users, setUsers] = useContext(UsersContext);
+  const [users, setUsers] = useState();
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = () => {
+    axios.get("/user").then((res) => {
+      let obj = {};
+      res.data.forEach((user) => {
+        obj[user.email] = user;
+      });
+
+      setUsers(obj);
+    });
+  };
+
   return (
     <div>
       <table>

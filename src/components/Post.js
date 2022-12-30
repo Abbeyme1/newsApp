@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { User } from "../classes/User";
 import { Enum } from "../enums";
@@ -6,7 +7,7 @@ import { UserContext } from "../helper/Context";
 import Style from "./Post.module.css";
 
 const Post = ({ post }) => {
-  const [user] = useContext(UserContext);
+  const { user } = useSelector((state) => state.user);
   const [ago] = useState(
     Math.round((new Date() - new Date(post.creationTime)) / (1000 * 60)),
   );

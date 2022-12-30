@@ -232,7 +232,7 @@ it("error rendered on wrong credentials", () => {
   expect(error.textContent).toContain("Try again");
 });
 
-it("register link should work", () => {
+it("register link should redirect", () => {
   render(<MockLogin />);
   const registerLink = screen.getByText(/don't have an account/i);
   fireEvent.click(registerLink);

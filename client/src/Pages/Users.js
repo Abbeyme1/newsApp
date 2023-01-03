@@ -17,7 +17,7 @@ const Users = () => {
 
   const getUsers = () => {
     axios
-      .get("/user", config)
+      .get("/api/user", config())
       .then((res) => {
         let obj = {};
         res.data.forEach((user) => {

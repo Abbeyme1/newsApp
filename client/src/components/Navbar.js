@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { UserContext } from "../helper/Context";
 import Style from "./Navbar.module.css";
 import Search from "./Search";
 

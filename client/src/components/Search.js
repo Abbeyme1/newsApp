@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { SearchContext } from "../helper/Context";
 import Style from "./Search.module.css";
 
@@ -12,6 +12,10 @@ const Search = () => {
   return (
     <div className={Style.searchBar}>
       <input value={search} onChange={handleSearch} />
+      <button onClick={() => setSearch("")} disabled={!search}>
+        {" "}
+        X{" "}
+      </button>
     </div>
   );
 };

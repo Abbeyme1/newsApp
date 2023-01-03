@@ -32,12 +32,6 @@ const PostTemplate = ({ type, handlePost, post, error, loading }) => {
     // clear();
   };
 
-  const clear = () => {
-    setTitle("");
-    setDescription("");
-    setLocation("");
-    setPostedBy("");
-  };
   return (
     <div>
       {loading && <>loading...</>}

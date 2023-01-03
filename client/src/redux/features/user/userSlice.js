@@ -16,7 +16,7 @@ export const login = createAsyncThunk(
     const { email, password } = user;
 
     return axios
-      .post("/user/login", {
+      .post("/api/user/login", {
         email,
         password,
       })
@@ -35,7 +35,7 @@ export const signUp = createAsyncThunk(
   async (user, { rejectWithValue }) => {
     const { name, email, password } = user;
     return axios
-      .post("/user/signup", {
+      .post("/api/user/signup", {
         name,
         email,
         password,

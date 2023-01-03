@@ -54,7 +54,7 @@ const EditUser = () => {
   const getUser = () => {
     setLoading(true);
     axios
-      .get(`/user/${userEmail}`, config)
+      .get(`/api/user/${userEmail}`, config())
       .then((res) => {
         setUser(res.data);
       })
@@ -65,7 +65,7 @@ const EditUser = () => {
   const handleEdit = () => {
     setLoading(true);
     axios
-      .put(`/user/update/${user.email}`, { name, email, admin }, config)
+      .put(`/api/user/update/${user.email}`, { name, email, admin }, config())
       .then((res) => {
         let updatedUser = res.data;
         if (updatedUser.email === currentUser.email) {

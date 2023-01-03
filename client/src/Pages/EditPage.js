@@ -25,7 +25,7 @@ const EditPage = () => {
 
   let getPost = () => {
     axios
-      .get(`/posts/${id}`, config)
+      .get(`/api/posts/${id}`, config())
       .then((res) => {
         setPost(res.data);
       })
@@ -41,13 +41,13 @@ const EditPage = () => {
     // save post
     axios
       .put(
-        `/posts/update/${id}`,
+        `/api/posts/update/${id}`,
         {
           title,
           description,
           location,
         },
-        config,
+        config(),
       )
       .then((res) => {
         setPost(res.data);

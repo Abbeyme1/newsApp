@@ -41,7 +41,6 @@ const Login = () => {
   };
 
   let clear = () => {
-    setEmail("");
     setPassword("");
   };
 

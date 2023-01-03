@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../classes/User");
 const db = require("../db");
+const { hashPassword, compare } = require("../hash");
 const { token } = require("../jwt");
 const Kind = require("../kind");
 const router = express.Router();
@@ -17,7 +18,8 @@ router.post("/signup", async (req, res) => {
       if (user) {
         return Promise.reject({ code: 422, message: "User Already Exists" });
       } else {
-        const newUser = new User(name, email, password);
+        const hash = hashPassword(password);
+        const newUser = new User(name, email, hash);
         return db.saveData(Kind.USERS, newUser.email, newUser);
       }
     })
@@ -42,7 +44,7 @@ router.post("/login", async (req, res) => {
     .then((result) => {
       const user = result[0];
       if (user) {
-        if (user.password === password) return user;
+        if (compare(password, user.password)) return user;
         else
           return Promise.reject({ code: 401, message: "Wrong email/password" });
       } else {

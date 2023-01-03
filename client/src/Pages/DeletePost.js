@@ -21,7 +21,7 @@ const DeletePost = () => {
 
   const deletePost = () => {
     axios
-      .delete(`/posts/${id}`, config)
+      .delete(`/api/posts/${id}`, config())
       .then((res) => {
         navigate("/");
       })

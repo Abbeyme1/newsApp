@@ -19,14 +19,14 @@ const CreatePost = () => {
 
     return axios
       .post(
-        "/posts/",
+        "/api/posts/",
         {
           title,
           description,
           location,
           postedBy,
         },
-        config,
+        config(),
       )
       .then((res) => {
         return res.data;

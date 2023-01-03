@@ -1,9 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { User } from "../classes/User";
 import { Enum } from "../enums";
-import { UserContext } from "../helper/Context";
 import Style from "./Post.module.css";
 
 const Post = ({ post }) => {
@@ -16,7 +14,7 @@ const Post = ({ post }) => {
     <div className={Style.post}>
       <div className={Style.header}>
         <div className={Style.heading}> {post.title}</div>
-        {post.postedBy === Enum.ANONYMOUS && (
+        {post.postedBy !== Enum.ANONYMOUS && (
           <div className={Style.by}> By: {post.postedBy}</div>
         )}
         <div className={Style.ago}>

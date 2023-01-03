@@ -38,7 +38,7 @@ const Post = () => {
 
   let getPost = () => {
     axios
-      .get(`/posts/${id}`, config)
+      .get(`/api/posts/${id}`, config())
       .then((res) => {
         setPost(res.data);
       })
@@ -48,7 +48,7 @@ const Post = () => {
   let handleLike = () => {
     if (user)
       axios
-        .post(`/posts/${id}/like`, null, config)
+        .post(`/api/posts/${id}/like`, null, config())
         .then((res) => {
           setPost(res.data);
         })
@@ -58,7 +58,7 @@ const Post = () => {
   let handleDislike = () => {
     if (user)
       axios
-        .post(`/posts/${id}/dislike`, null, config)
+        .post(`/api/posts/${id}/dislike`, null, config())
         .then((res) => {
           setPost(res.data);
         })
@@ -73,11 +73,11 @@ const Post = () => {
     if (user)
       axios
         .post(
-          `/posts/${id}/comment`,
+          `/api/posts/${id}/comment`,
           {
             comment: comment,
           },
-          config,
+          config(),
         )
         .then((res) => {
           setPost(res.data);
@@ -90,7 +90,7 @@ const Post = () => {
   var deleteComment = (commentId) => {
     if (user)
       axios
-        .delete(`/posts/${id}/comment/${commentId}`, config)
+        .delete(`/api/posts/${id}/comment/${commentId}`, config())
         .then((res) => {
           setPost(res.data);
         })
